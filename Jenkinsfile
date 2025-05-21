@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Clone') {
       steps {
-        git 'https://github.com/yourusername/hello-world-react.git'
+        git 'https://github.com/Suhailakp/hello-world-react.git'
       }
     }
 
