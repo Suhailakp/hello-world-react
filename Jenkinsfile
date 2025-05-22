@@ -1,40 +1,41 @@
 pipeline {
-  agent any
+    agent any
 
-  tools {
-    nodejs 'node22' // Use the name you gave earlier
-  }
-
-  stages {
-    stage('Clone') {
-      steps {
-        git 'https://github.com/Suhailakp/hello-world-react.git'
-      }
+    tools {
+        nodejs 'nodejs-22' // matches the name configured in Global Tools
     }
 
-    stage('Install Dependencies') {
-      steps {
-        sh 'npm install'
-      }
+    environment {
+        BUILD_DIR = 'dist'
+        DEPLOY_PATH = '/root/hello-world-react'
     }
 
-    stage('Build') {
-      steps {
-        sh 'npm run build'
-      }
-    }
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/Suhailakp/hello-world-react.git'
+            }
+        }
 
-    stage('Archive Build') {
-      steps {
-        archiveArtifacts artifacts: 'dist/**', fingerprint: true
-      }
-    }
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
 
-    // Optional Deploy stage
-    // stage('Deploy') {
-    //   steps {
-    //     sh 'cp -r dist/* /var/www/html'
-    //   }
-    // }
-  }
+        stage('Build Project') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                    sudo rm -rf $DEPLOY_PATH/*
+                    sudo cp -r $BUILD_DIR/* $DEPLOY_PATH/
+                '''
+            }
+        }
+    }
 }
