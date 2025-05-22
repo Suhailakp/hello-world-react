@@ -1,0 +1,7 @@
+stage('Install Dependencies') {
+    steps {
+        dir('subfolder-name') {
+            sh 'npm install'
+        }
+    }
+}
